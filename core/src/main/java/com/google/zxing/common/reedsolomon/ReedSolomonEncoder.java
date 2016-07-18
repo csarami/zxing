@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.zxing.common.reedsolomon;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>Implements Reed-Solomon enbcoding, as the name implies.</p>
- *
+ * <p>Implements Reed-Solomon encoding, as the name implies.</p>
  * @author Sean Owen
  * @author William Rucklidge
  */
@@ -48,18 +45,22 @@ public final class ReedSolomonEncoder {
     }
     return cachedGenerators.get(degree);
   }
-
+  // ecBytes, is the number of parity check bits or n-k. In RS[7,3,5] over GF(8) this is n-k = 4 symbols.
   public void encode(int[] toEncode, int ecBytes) {
-    if (ecBytes == 0) {
+
+    if (ecBytes == 0) 
       throw new IllegalArgumentException("No error correction bytes");
-    }
+
+    
     int dataBytes = toEncode.length - ecBytes;
-    if (dataBytes <= 0) {
+   
+    if (dataBytes <= 0) 
       throw new IllegalArgumentException("No data bytes provided");
-    }
+
     GenericGFPoly generator = buildGenerator(ecBytes);
     int[] infoCoefficients = new int[dataBytes];
     System.arraycopy(toEncode, 0, infoCoefficients, 0, dataBytes);
+    // build the message polynomial
     GenericGFPoly info = new GenericGFPoly(field, infoCoefficients);
     info = info.multiplyByMonomial(ecBytes, 1);
     GenericGFPoly remainder = info.divide(generator)[1];
@@ -70,5 +71,35 @@ public final class ReedSolomonEncoder {
     }
     System.arraycopy(coefficients, 0, toEncode, dataBytes + numZeroCoefficients, coefficients.length);
   }
+  //encode from binary
+  public void encodeChekad(int[] toEncode, int ecBytes) {
+	
+    if (ecBytes == 0) {
+      throw new IllegalArgumentException("No error correction bytes");
+    }
+    
+    int dataBytes = toEncode.length - ecBytes;
+   
+    
+    if (dataBytes <= 0) {
+      throw new IllegalArgumentException("No data bytes provided");
+    }
+    GenericGFPoly generator = buildGenerator(ecBytes);
+    int[] infoCoefficients = new int[toEncode.length];
+    System.arraycopy(toEncode, 0, infoCoefficients, 0,toEncode.length);
+    // build the message polynomial
+    GenericGFPoly info = new GenericGFPoly(field, infoCoefficients);
+    info = info.multiplyByMonomial(ecBytes, 1);
+    GenericGFPoly remainder = info.divide(generator)[1];
+    int[] coefficients = remainder.getCoefficients();
+    int numZeroCoefficients = ecBytes - coefficients.length;
+    for (int i = 0; i < numZeroCoefficients; i++) {
+      toEncode[dataBytes + i] = 0;
+    }
+    System.arraycopy(coefficients, 0, toEncode, dataBytes + numZeroCoefficients, coefficients.length);
+  }
+  
+  
+  
 
 }

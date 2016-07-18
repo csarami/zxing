@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2007 ZXing authors
  *
@@ -14,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.google.zxing.common.reedsolomon;
+
 
 /**
  * <p>Thrown when an exception occurs during Reed-Solomon decoding, such as when

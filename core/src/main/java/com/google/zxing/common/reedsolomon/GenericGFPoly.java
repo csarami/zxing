@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.zxing.common.reedsolomon;
+
 
 /**
  * <p>Represents a polynomial whose coefficients are elements of a GF.
@@ -25,6 +25,7 @@ package com.google.zxing.common.reedsolomon;
  *
  * @author Sean Owen
  */
+
 final class GenericGFPoly {
 
   private final GenericGF field;
@@ -260,5 +261,12 @@ final class GenericGFPoly {
     }
     return result.toString();
   }
-
+  public static void main(String[] args){
+	  GenericGFPoly m = new GenericGFPoly(GenericGF.GF8,new int[]{1,2,4});
+	  GenericGFPoly g = new GenericGFPoly(GenericGF.GF8,new int[]{1,3,1,2,3});
+	  
+	  
+	  
+  }
+ 
 }
