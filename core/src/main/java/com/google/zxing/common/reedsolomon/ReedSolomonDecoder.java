@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /*
  * Copyright 2007 ZXing authors
  *
@@ -84,6 +86,27 @@ public final class ReedSolomonDecoder {
       received[position] = GenericGF.addOrSubtract(received[position], errorMagnitudes[i]);
     }
   }
+  public int[] decodeFromBinary(int[] mpn, int dmin) throws ReedSolomonException {
+		GenericGF F = field;
+		System.out.println(Arrays.toString(mpn));
+		int dim = (int) (Math.log(F.getSize())/Math.log(2));
+		
+		int[] mpnSym = F.bitarrayToGF(mpn);
+
+		try {
+			this.decode(mpnSym, dmin-1);
+		} catch (ReedSolomonException e) {
+			e.printStackTrace();
+		}
+		System.out.println("\nAfter DECODER");
+		System.out.print(Arrays.toString(mpnSym));
+
+		System.out.println("\nAfter DECODER in Binary");
+		System.out.println(Arrays.toString(GenericGF.toBinary(mpnSym,2,dim)));
+		return GenericGF.toBinary(mpnSym,2,dim);
+	  
+  }
+
 
   private GenericGFPoly[] runEuclideanAlgorithm(GenericGFPoly a, GenericGFPoly b, int R)
       throws ReedSolomonException {
@@ -185,6 +208,23 @@ public final class ReedSolomonDecoder {
       }
     }
     return result;
+  }
+  
+  public static void main(String[] args){
+	  
+	  
+	  int[] mpn =new int[]{1,0,0, 0,1,0 , 0,0,1,  1,0,1,  1,1,1,  0,0,1, 0,0,0};// m + noise
+		//System.out.println(Arrays.toString(mpn));
+	  	GenericGF F = GenericGF.GF8;
+		ReedSolomonDecoder rsd = new ReedSolomonDecoder(F);
+		try {
+			System.out.println(Arrays.toString(rsd.decodeFromBinary(mpn, 5)));
+		} catch (ReedSolomonException e) {
+			e.printStackTrace();
+		}
+		
+	  
+	  
   }
 
 }

@@ -175,8 +175,25 @@ public class Example {
 
 		System.out.println("\nAfter DECODER in Binary");
 		System.out.println(Arrays.toString(GenericGF.toBinary(mpnSym,2,dim)));
-
 		
+		/*
+		 * Transmitted message in binary!
+			[1, 0, 0, 0, 1, 0, 0, 0, 1]
+			Prepapred message in GF ( with padded zeros!)
+			[4, 2, 1, 0, 0, 0, 0]
+			Encoded message in GF last (n-k) symbols are parity
+			[4, 2, 1, 5, 7, 6, 3]
+			Encoded ( transmitted) binary message in last (n-k)*m bits are parity
+			[1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1]
+			[1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0]
+			
+			After DECODER
+			[4, 2, 1, 5, 7, 6, 3]
+			After DECODER in Binary
+			[1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1]
+
+		 */
+
 	}
 
 }
