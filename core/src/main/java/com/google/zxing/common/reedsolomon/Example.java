@@ -127,72 +127,26 @@ public class Example {
 
 	public static void main(String[] args) {
 
-		ReedSolomonEncoder rse = new ReedSolomonEncoder(GenericGF.GF8);
-		//String s="This is Chekad. This is Albert.";
-		//GenericGFPoly m = new GenericGFPoly(GenericGF.GF8,new int[]{1,2,4});
-		// We must pad 0's to the end of encoder!
-		GenericGF F = GenericGF.GF8;
-		System.out.println("Transmitted message in binary!");
-
+	GenericGF F = GenericGF.GF8;
+		ReedSolomonEncoder rse = new ReedSolomonEncoder(F);
 		int[] message = new int[]{1,0,0,0,1,0,0,0,1};
+		System.out.println("Original message");
 		System.out.println(Arrays.toString(message));
-		int[] m = F.bitarrayToGF(message);
-
-
-		//int[] toE = new int[]{4,2,1,0,0,0,0};
-		int[] toE= new int[F.getSize() - 1];
-		System.arraycopy(m, 0, toE, 0, m.length);
-		System.out.println("Prepapred message in GF ( with padded zeros!)");
-		System.out.println(Arrays.toString(toE));
-
-
-		int dim = (int) (Math.log(F.getSize())/Math.log(2));
-		rse.encode(toE,F.getSize()-1-dim);
-
-		System.out.println("Encoded message in GF last (n-k) symbols are parity");
-		System.out.println(Arrays.toString(toE));
-
-		System.out.println("Encoded ( transmitted) binary message in last (n-k)*m bits are parity");
-		toE = GenericGF.toBinary(toE,2,(int) (Math.log(F.getSize())/Math.log(2)));
-		System.out.println(Arrays.toString(toE));
+		System.out.println(Arrays.toString(rse.encodeFromBinary(message)));
 		
-
-		// Here we can add random noise using method addNoiseAtLoci
-
+		System.out.println("Message + noise"); //This can be automaized using method above.
 		int[] mpn =new int[]{1,0,0, 0,1,0 , 0,0,1,  1,0,1,  1,1,1,  0,0,1, 0,0,0};// m + noise
-		System.out.println(Arrays.toString(mpn));
+		//System.out.println(Arrays.toString(mpn));
+	  	
 		ReedSolomonDecoder rsd = new ReedSolomonDecoder(F);
-		int[] mpnSym = F.bitarrayToGF(mpn);
-
 		try {
-			rsd.decode(mpnSym, 4);
+			System.out.println(Arrays.toString(rsd.decodeFromBinary(mpn, 5)));
 		} catch (ReedSolomonException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("\nAfter DECODER");
-		System.out.print(Arrays.toString(mpnSym));
 
-		System.out.println("\nAfter DECODER in Binary");
-		System.out.println(Arrays.toString(GenericGF.toBinary(mpnSym,2,dim)));
-		
-		/*
-		 * Transmitted message in binary!
-			[1, 0, 0, 0, 1, 0, 0, 0, 1]
-			Prepapred message in GF ( with padded zeros!)
-			[4, 2, 1, 0, 0, 0, 0]
-			Encoded message in GF last (n-k) symbols are parity
-			[4, 2, 1, 5, 7, 6, 3]
-			Encoded ( transmitted) binary message in last (n-k)*m bits are parity
-			[1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1]
-			[1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0]
-			
-			After DECODER
-			[4, 2, 1, 5, 7, 6, 3]
-			After DECODER in Binary
-			[1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1]
 
-		 */
+	}
 
 	}
 
